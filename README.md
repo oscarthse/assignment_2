@@ -61,7 +61,7 @@ IAI_Assignment2/
 
 ## Requirements
 
-**Python Version**: Python 3.10 or higher is required.
+**Python Version**: Python 3.11 or higher is required.
 
 Install the required dependencies:
 
