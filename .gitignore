@@ -1,0 +1,41 @@
+# Data files
+*.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Model artifacts (optional - uncomment if you don't want to track models)
+# models/*.pkl
+# models/*.joblib
+
+# OS
+.DS_Store
+Thumbs.db
+
+# CI/CD artifacts
+.pytest_cache/
+.coverage
+htmlcov/

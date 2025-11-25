@@ -61,6 +61,8 @@ IAI_Assignment2/
 
 ## Requirements
 
+**Python Version**: Python 3.9 or higher is required.
+
 Install the required dependencies:
 
 ```bash
@@ -72,6 +74,171 @@ The main dependencies include:
 - pandas
 - numpy
 - joblib
+
+### Development Dependencies
+
+For code quality checks (linting, formatting), install:
+
+```bash
+pip install ruff black
+```
+
+These are used by the CI/CD pipeline and can be run locally for code quality checks.
+
+## Development
+
+### Code Quality
+
+Before committing, you can run local validation:
+
+```bash
+# Run project structure and syntax validation
+python scripts/validate.py
+
+# Format code with Black
+black src/
+
+# Lint code with Ruff
+ruff check src/
+```
+
+### CI/CD
+
+This project uses GitHub Actions for continuous integration. The CI pipeline runs automatically on every push and pull request.
+
+#### How It Works
+
+**Automatic Triggers:**
+- Runs on every push to `main` or `develop` branches
+- Runs on every pull request targeting `main` or `develop`
+- All checks must pass for the workflow to succeed
+
+**What Gets Checked:**
+
+The CI pipeline runs 4 parallel jobs:
+
+1. **Code Quality Checks** (`lint-and-format`)
+   - ✅ Code formatting with Black (ensures consistent style)
+   - ✅ Code linting with Ruff (catches errors and style issues)
+   - ✅ Python syntax validation (catches syntax errors)
+
+2. **Project Structure Validation** (`validate-structure`)
+   - ✅ Verifies all required files exist:
+     - `src/model.py`, `src/data_prep.py`, `src/features.py`, `src/evaluate.py`, `src/utils.py`
+     - `requirements.txt`, `README.md`, `pyproject.toml`
+
+3. **Import Validation** (`import-validation`)
+   - ✅ Tests that all Python modules can be imported
+   - ✅ Validates Python syntax in all source files
+   - Gracefully handles empty files (won't fail if files are still being developed)
+
+4. **Dependency Validation** (`dependency-check`)
+   - ✅ Validates `requirements.txt` format
+   - ✅ Checks for common formatting issues (e.g., quoted packages)
+
+#### Workflow: Before Pushing
+
+**1. Run Local Validation (Recommended)**
+```bash
+# Run all validation checks locally
+python scripts/validate.py
+```
+
+This runs the same checks locally so you can fix issues before pushing.
+
+**2. Format Your Code**
+```bash
+# Auto-format code with Black
+black src/
+
+# Check what would be formatted (without changing files)
+black --check src/
+```
+
+**3. Lint Your Code**
+```bash
+# Run linter to catch issues
+ruff check src/
+
+# Auto-fix issues where possible
+ruff check src/ --fix
+```
+
+**4. Commit and Push**
+```bash
+git add .
+git commit -m "Your commit message"
+git push
+```
+
+The CI will automatically run when you push.
+
+#### Viewing CI Results
+
+**On GitHub:**
+1. Go to your repository on GitHub
+2. Click the **"Actions"** tab
+3. You'll see a list of workflow runs
+4. Click on a run to see detailed results
+5. Green checkmark ✅ = all checks passed
+6. Red X ❌ = some checks failed (click to see details)
+
+**Understanding Failures:**
+
+- **Formatting Error**: Run `black src/` locally and commit the changes
+- **Linting Error**: Fix the issues shown by Ruff, or run `ruff check src/ --fix`
+- **Syntax Error**: Fix the Python syntax error in the file mentioned
+- **Missing File**: Ensure all required files exist in the project
+- **Import Error**: Check that your imports are correct and dependencies are installed
+- **Dependency Format Error**: Fix the format in `requirements.txt` (no quotes, proper version specifiers)
+
+#### Best Practices
+
+1. **Run validation locally first**: Catch issues before pushing
+2. **Fix formatting automatically**: Use `black src/` to auto-format
+3. **Check CI before merging PRs**: Ensure all checks pass
+4. **Read error messages**: CI provides specific feedback on what failed
+
+#### Example Workflow
+
+```bash
+# 1. Make your changes
+# ... edit files ...
+
+# 2. Validate locally
+python scripts/validate.py
+
+# 3. Format code
+black src/
+
+# 4. Check linting
+ruff check src/
+
+# 5. If all good, commit and push
+git add .
+git commit -m "Add feature X"
+git push
+
+# 6. Check GitHub Actions tab for CI results
+```
+
+#### Troubleshooting
+
+**CI fails but works locally:**
+- Ensure you're using Python 3.9+
+- Check that all dependencies are in `requirements.txt`
+- Verify file paths are correct (CI uses Linux paths)
+
+**Formatting keeps failing:**
+- Run `black src/` and commit the formatted code
+- Consider adding a pre-commit hook (see below)
+
+**Import errors in CI:**
+- Make sure all imports are at the top of files
+- Check that you're not using relative imports incorrectly
+- Verify all dependencies are listed in `requirements.txt`
+
+See `.github/workflows/ci.yml` for the complete CI configuration.
 
 ## How to Run
 
